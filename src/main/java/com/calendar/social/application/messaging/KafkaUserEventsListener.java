@@ -21,7 +21,7 @@ public class KafkaUserEventsListener {
     }
 
     @KafkaListener(topics = USER_CREATED_TOPIC)
-    Mono<Void> listen(String message) {
+    Mono<Void> writeUserOnUserCreatedEvent(String message) {
         return userService.writeUser(objectMapper.readValue(message, UserCreatedEventDTO.class));
     }
 }
