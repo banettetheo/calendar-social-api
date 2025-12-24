@@ -10,12 +10,12 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface UserNodeRepository extends ReactiveNeo4jRepository<UserNodeEntity, Long> {
 
-    @Query("MATCH (me:User {id: $userId})\n" +
+    @Query("MATCH (me:User {userId: $userId})\n" +
             "MATCH (other:User) \n" +
-            "WHERE other.id <> me.id\n" +
+            "WHERE other.userId <> me.userId\n" +
             "OPTIONAL MATCH (me)-[r:FRIENDSHIP]-(other)\n" +
-            "RETURN \n" +
-            "    other.id AS id,\n" +
+            "RETURN DISTINCT\n" +
+            "    other.userId AS userId,\n" +
             "    other.userName AS userName,\n" +
             "    other.profilePicUrl AS profilePicUrl,\n" +
             "    CASE \n" +
@@ -23,10 +23,8 @@ public interface UserNodeRepository extends ReactiveNeo4jRepository<UserNodeEnti
             "        WHEN r.status = 'ACCEPTED' THEN 'FRIENDS'\n" +
             "        WHEN r.status = 'PENDING' AND startNode(r) = me THEN 'SENT_BY_ME'\n" +
             "        WHEN r.status = 'PENDING' AND startNode(r) = other THEN 'SENT_BY_THEM'\n" +
-            "        WHEN r.status = 'REJECTED' AND startNode(r) = me THEN 'REJECTED_BY_THEM'\n" +
-            "        WHEN r.status = 'REJECTED' AND startNode(r) = other THEN 'REJECTED_BY_ME'\n" +
             "        ELSE 'NONE'\n" +
             "    END AS relationStatus\n" +
-            "ORDER BY other.username ASC")
+            "ORDER BY userName ASC")
     Flux<UserSocialDBDTO> findAllWithSocialStatus(Long userId);
 }

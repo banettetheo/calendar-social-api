@@ -4,7 +4,6 @@ import com.calendar.social.domain.models.UserCreatedEventDTO;
 import com.calendar.social.domain.models.UserSocialDTO;
 import com.calendar.social.domain.ports.UserRepositoryPort;
 import com.calendar.social.infrastucture.mappers.UserNodeMapper;
-import com.calendar.social.infrastucture.models.dtos.UserSocialDBDTO;
 import com.calendar.social.infrastucture.repositories.UserNodeRepository;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;

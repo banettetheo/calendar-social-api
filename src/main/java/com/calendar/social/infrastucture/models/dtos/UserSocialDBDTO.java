@@ -1,7 +1,7 @@
 package com.calendar.social.infrastucture.models.dtos;
 
 public record UserSocialDBDTO(
-        Long id,
+        Long userId,
         String userName,
         String profilePicUrl,
         String relationStatus

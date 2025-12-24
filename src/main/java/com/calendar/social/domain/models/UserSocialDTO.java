@@ -1,7 +1,7 @@
 package com.calendar.social.domain.models;
 
 public record UserSocialDTO(
-        Long id,
+        Long userId,
         String userName,
         String profilePicUrl,
         String relationStatus
