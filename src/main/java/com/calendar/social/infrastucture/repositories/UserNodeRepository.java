@@ -28,7 +28,15 @@ public interface UserNodeRepository extends ReactiveNeo4jRepository<UserNodeEnti
             "ORDER BY userName ASC")
     Flux<UserSocialDBDTO> findAllWithSocialStatus(Long userId);
 
-    @Query("MATCH (me:User {userId: $userId})-[:FRIENDSHIP {status: $status}]-(friend:User) " +
+    @Query("MATCH (me:User {userId: $userId})-[:FRIENDSHIP {status: 'ACCEPTED'}]-(friend:User) " +
             "RETURN friend")
-    Flux<UserNodeEntity> findUserRelationsByStatus(Long userId, String status);
+    Flux<UserNodeEntity> findAllFriends(Long userId);
+
+    @Query("MATCH (me:User {userId: $userId})-[:FRIENDSHIP {status: 'PENDING'}]->(friend:User) " +
+            "RETURN friend")
+    Flux<UserNodeEntity> findOutgoingRequests(Long userId);
+
+    @Query("MATCH (me:User {userId: $userId})<-[:FRIENDSHIP {status: 'PENDING'}]-(friend:User) " +
+            "RETURN friend")
+    Flux<UserNodeEntity> findIncomingRequests(Long userId);
 }

@@ -12,5 +12,9 @@ public interface UserRepositoryPort {
 
     Flux<UserSocialDTO> findAllWithSocialStatus(Long userId);
 
-    Flux<UserNodeDTO> findAllByFriendshipsStatus(Long userId, String status);
+    Flux<UserNodeDTO> findAllFriends(Long userId);
+
+    Flux<UserNodeDTO> findOutgoingRequests(Long userId);
+
+    Flux<UserNodeDTO> findIncomingRequests(Long userId);
 }

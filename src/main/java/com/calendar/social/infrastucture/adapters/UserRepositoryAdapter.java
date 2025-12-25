@@ -29,7 +29,15 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return userNodeRepository.findAllWithSocialStatus(userId).map(userNodeMapper::toUserSocialDTO);
     }
 
-    public Flux<UserNodeDTO> findAllByFriendshipsStatus(Long userId, String status) {
-            return userNodeRepository.findUserRelationsByStatus(userId, status).map(userNodeMapper::toUserNode);
+    public Flux<UserNodeDTO> findAllFriends(Long userId) {
+            return userNodeRepository.findAllFriends(userId).map(userNodeMapper::toUserNode);
+    }
+
+    public Flux<UserNodeDTO> findOutgoingRequests(Long userId) {
+        return userNodeRepository.findOutgoingRequests(userId).map(userNodeMapper::toUserNode);
+    }
+
+    public Flux<UserNodeDTO> findIncomingRequests(Long userId) {
+        return userNodeRepository.findIncomingRequests(userId).map(userNodeMapper::toUserNode);
     }
 }

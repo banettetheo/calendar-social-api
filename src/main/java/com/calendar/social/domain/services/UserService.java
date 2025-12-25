@@ -22,8 +22,14 @@ public class UserService {
     }
 
     public Flux<UserResult> readAllWithSocialStatus(Long userId, String friendshipsStatus) {
-        return Objects.isNull(friendshipsStatus) ?
-                userRepositoryPort.findAllWithSocialStatus(userId).cast(UserResult.class) :
-                userRepositoryPort.findAllByFriendshipsStatus(userId, friendshipsStatus).cast(UserResult.class);
+
+        if (Objects.isNull(friendshipsStatus)) return userRepositoryPort.findAllWithSocialStatus(userId).cast(UserResult.class);
+
+        return switch (friendshipsStatus) {
+            case "PENDING_INCOMING" -> userRepositoryPort.findIncomingRequests(userId).cast(UserResult.class);
+            case "PENDING_OUTGOING" -> userRepositoryPort.findOutgoingRequests(userId).cast(UserResult.class);
+            case "FRIENDS" -> userRepositoryPort.findAllFriends(userId).cast(UserResult.class);
+            default -> Flux.empty();
+        };
     }
 }
