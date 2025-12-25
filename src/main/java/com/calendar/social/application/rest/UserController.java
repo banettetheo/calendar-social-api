@@ -1,11 +1,8 @@
 package com.calendar.social.application.rest;
 
-import com.calendar.social.domain.models.UserSocialDTO;
+import com.calendar.social.domain.models.UserResult;
 import com.calendar.social.domain.services.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 @RestController
@@ -19,7 +16,9 @@ public class UserController {
     }
 
     @GetMapping
-    public Flux<UserSocialDTO> readAllWithSocialStatus(@RequestHeader("X-Internal-User-Id") Long userId) {
-        return userService.readAllWithSocialStatus(userId);
+    public Flux<UserResult> readAllWithSocialStatus(
+            @RequestHeader("X-Internal-User-Id") Long userId,
+            @RequestParam(required = false) String friendshipStatus) {
+        return userService.readAllWithSocialStatus(userId, friendshipStatus);
     }
 }

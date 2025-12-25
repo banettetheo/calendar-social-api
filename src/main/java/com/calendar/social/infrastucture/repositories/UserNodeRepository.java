@@ -27,4 +27,8 @@ public interface UserNodeRepository extends ReactiveNeo4jRepository<UserNodeEnti
             "    END AS relationStatus\n" +
             "ORDER BY userName ASC")
     Flux<UserSocialDBDTO> findAllWithSocialStatus(Long userId);
+
+    @Query("MATCH (me:User {userId: $userId})-[:FRIENDSHIP {status: $status}]-(friend:User) " +
+            "RETURN friend")
+    Flux<UserNodeEntity> findUserRelationsByStatus(Long userId, String status);
 }

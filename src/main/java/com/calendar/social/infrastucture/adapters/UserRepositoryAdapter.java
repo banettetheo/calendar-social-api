@@ -1,6 +1,7 @@
 package com.calendar.social.infrastucture.adapters;
 
 import com.calendar.social.domain.models.UserCreatedEventDTO;
+import com.calendar.social.domain.models.UserNodeDTO;
 import com.calendar.social.domain.models.UserSocialDTO;
 import com.calendar.social.domain.ports.UserRepositoryPort;
 import com.calendar.social.infrastucture.mappers.UserNodeMapper;
@@ -26,5 +27,9 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     public Flux<UserSocialDTO> findAllWithSocialStatus(Long userId) {
         return userNodeRepository.findAllWithSocialStatus(userId).map(userNodeMapper::toUserSocialDTO);
+    }
+
+    public Flux<UserNodeDTO> findAllByFriendshipsStatus(Long userId, String status) {
+            return userNodeRepository.findUserRelationsByStatus(userId, status).map(userNodeMapper::toUserNode);
     }
 }

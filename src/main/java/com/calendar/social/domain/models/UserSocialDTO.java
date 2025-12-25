@@ -5,4 +5,4 @@ public record UserSocialDTO(
         String userName,
         String profilePicUrl,
         String relationStatus
-) {}
+) implements UserResult {}
