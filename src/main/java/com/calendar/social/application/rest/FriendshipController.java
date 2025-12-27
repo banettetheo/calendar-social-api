@@ -22,4 +22,9 @@ public class FriendshipController {
     public Mono<ResponseEntity<UserNodeDTO>> sendFriendRequest(@RequestHeader("X-Internal-User-Id") Long userId, @RequestBody @Valid FriendRequestDTO friendRequestDTO) {
         return friendshipService.sendFriendRequest(userId, friendRequestDTO.userTag()).map(ResponseEntity::ok);
     }
+
+    @PostMapping("accept/{senderId}")
+    public Mono<ResponseEntity<UserNodeDTO>> acceptFriendRequest(@RequestHeader("X-Internal-User-Id") Long userId, @PathVariable Long senderId) {
+        return friendshipService.acceptFriendRequest(userId, senderId).map(ResponseEntity::ok);
+    }
 }

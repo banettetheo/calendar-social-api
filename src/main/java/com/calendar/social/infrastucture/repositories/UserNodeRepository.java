@@ -19,6 +19,11 @@ public interface UserNodeRepository extends ReactiveNeo4jRepository<UserNodeEnti
             "RETURN DISTINCT target")
     Mono<UserNodeEntity> sendFriendRequest(Long userId, String targetName, Integer targetHashtag);
 
+    @Query("MATCH (sender:User {userId: $senderId})-[r:FRIENDSHIP {status: 'PENDING'}]->(me:User {userId: $myId}) " +
+            "SET r.status = 'ACCEPTED', r.acceptedAt = datetime() " +
+            "RETURN DISTINCT sender")
+    Mono<UserNodeEntity> acceptFriendRequest(Long myId, Long senderId);
+
     @Query("MATCH (me:User {userId: $userId})\n" +
             "MATCH (other:User) \n" +
             "WHERE other.userId <> me.userId\n" +

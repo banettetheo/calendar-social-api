@@ -21,4 +21,8 @@ public class FriendshipService {
 
         return userRepositoryPort.sendFriendRequest(userId, userName, hashtag);
     }
+
+    public Mono<UserNodeDTO> acceptFriendRequest(Long userId, Long senderId) {
+        return userRepositoryPort.acceptFriendRequest(userId, senderId);
+    }
 }

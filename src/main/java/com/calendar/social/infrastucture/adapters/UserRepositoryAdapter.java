@@ -46,4 +46,10 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
                 .map(userNodeMapper::toUserNode)
                 .switchIfEmpty(Mono.error(new RuntimeException("Conflit")));
     }
+
+    public Mono<UserNodeDTO> acceptFriendRequest(Long userId, Long senderId) {
+        return userNodeRepository.acceptFriendRequest(userId, senderId)
+                .map(userNodeMapper::toUserNode)
+                .switchIfEmpty(Mono.error(new RuntimeException("Conflit")));
+    }
 }
