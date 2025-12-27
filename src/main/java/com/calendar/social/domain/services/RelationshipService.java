@@ -1,15 +1,18 @@
 package com.calendar.social.domain.services;
 
 import com.calendar.social.domain.models.UserNodeDTO;
+import com.calendar.social.domain.ports.RelationshipRepositoryPort;
 import com.calendar.social.domain.ports.UserRepositoryPort;
 import reactor.core.publisher.Mono;
 
-public class FriendshipService {
+public class RelationshipService {
 
     private final UserRepositoryPort userRepositoryPort;
+    private final RelationshipRepositoryPort relationshipRepositoryPort;
 
-    public FriendshipService(UserRepositoryPort userRepositoryPort) {
+    public RelationshipService(UserRepositoryPort userRepositoryPort, RelationshipRepositoryPort relationshipRepositoryPort) {
         this.userRepositoryPort = userRepositoryPort;
+        this.relationshipRepositoryPort = relationshipRepositoryPort;
     }
 
     public Mono<UserNodeDTO> sendFriendRequest(Long userId, String userTag) {
@@ -28,5 +31,9 @@ public class FriendshipService {
 
     public Mono<UserNodeDTO> rejectFriendRequest(Long userId, Long senderId) {
         return userRepositoryPort.rejectFriendRequest(userId, senderId);
+    }
+
+    public Mono<Void> deleteFriendship(Long userId, Long friendId) {
+        return relationshipRepositoryPort.deleteFriendship(userId, friendId).then();
     }
 }

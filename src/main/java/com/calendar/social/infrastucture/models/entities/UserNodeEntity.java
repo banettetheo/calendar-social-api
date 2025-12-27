@@ -27,5 +27,5 @@ public class UserNodeEntity {
     private String profilePicUrl;
 
     @Relationship(type = "FRIENDSHIP", direction = Relationship.Direction.OUTGOING)
-    private List<FriendshipEntity> friendships;
+    private List<RelationshipEntity> friendships;
 }

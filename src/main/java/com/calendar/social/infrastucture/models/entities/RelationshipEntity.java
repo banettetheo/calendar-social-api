@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FriendshipEntity {
+public class RelationshipEntity {
     @RelationshipId
     private Long id;
 
