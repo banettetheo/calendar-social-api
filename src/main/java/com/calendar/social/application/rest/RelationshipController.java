@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("friendships")
+@RequestMapping("relationships")
 public class RelationshipController {
 
     private final RelationshipService relationshipService;
