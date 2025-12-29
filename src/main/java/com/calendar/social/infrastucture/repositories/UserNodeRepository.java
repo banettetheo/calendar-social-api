@@ -58,4 +58,6 @@ public interface UserNodeRepository extends ReactiveNeo4jRepository<UserNodeEnti
     @Query("MATCH (me:User {userId: $userId})<-[:RELATIONSHIP {status: 'PENDING'}]-(targetUser:User) " +
             "RETURN DISTINCT targetUser")
     Flux<UserNodeEntity> findIncomingRequests(Long userId);
+
+    Mono<Boolean> existsByUserNameAndHashtag(String userName, Integer hashtag);
 }

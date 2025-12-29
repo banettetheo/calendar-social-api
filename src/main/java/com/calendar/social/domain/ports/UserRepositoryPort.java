@@ -23,4 +23,6 @@ public interface UserRepositoryPort {
     Mono<UserNodeDTO> acceptFriendRequest(Long userId, Long senderId);
 
     Mono<UserNodeDTO> rejectFriendRequest(Long userId, Long senderId);
+
+    Mono<Boolean> existsByUserNameAndHashtag(String userName, Integer hashtag);
 }

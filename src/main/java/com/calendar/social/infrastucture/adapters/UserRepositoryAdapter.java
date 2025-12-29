@@ -33,6 +33,10 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
             return userNodeRepository.findAllFriends(userId).map(userNodeMapper::toUserNode);
     }
 
+    public Mono<Boolean> existsByUserNameAndHashtag(String userName, Integer hashtag) {
+        return userNodeRepository.existsByUserNameAndHashtag(userName, hashtag);
+    }
+
     public Flux<UserNodeDTO> findOutgoingRequests(Long userId) {
         return userNodeRepository.findOutgoingRequests(userId).map(userNodeMapper::toUserNode);
     }

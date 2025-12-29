@@ -22,7 +22,11 @@ public class RelationshipService {
         String userName = parts[0];
         Integer hashtag = Integer.parseInt(parts[1]);
 
-        return userRepositoryPort.sendFriendRequest(userId, userName, hashtag);
+        return userRepositoryPort.existsByUserNameAndHashtag(userName, hashtag)
+                .filter(Boolean::booleanValue)
+                // todo : faire une erreur plus explicite
+                .switchIfEmpty(Mono.error(new RuntimeException("l'utilisateur n'existe pas")))
+                .then(userRepositoryPort.sendFriendRequest(userId, userName, hashtag));
     }
 
     public Mono<UserNodeDTO> acceptFriendRequest(Long userId, Long senderId) {
