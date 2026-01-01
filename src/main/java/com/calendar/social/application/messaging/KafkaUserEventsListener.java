@@ -20,6 +20,7 @@ public class KafkaUserEventsListener {
         this.objectMapper = objectMapper;
     }
 
+    // todo : faire la gestion des erreurs pour les listeners kafka
     @KafkaListener(topics = USER_CREATED_TOPIC)
     Mono<Void> writeUserOnUserCreatedEvent(String message) {
         return userService.writeUser(objectMapper.readValue(message, UserCreatedEventDTO.class));
