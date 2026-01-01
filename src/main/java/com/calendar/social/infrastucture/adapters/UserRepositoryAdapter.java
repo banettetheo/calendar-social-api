@@ -4,12 +4,18 @@ import com.calendar.social.domain.models.UserCreatedEventDTO;
 import com.calendar.social.domain.models.UserNodeDTO;
 import com.calendar.social.domain.models.UserSocialDTO;
 import com.calendar.social.domain.ports.UserRepositoryPort;
+import com.calendar.social.exception.BusinessErrorCode;
+import com.calendar.social.exception.BusinessException;
+import com.calendar.social.exception.TechnicalErrorCode;
+import com.calendar.social.exception.TechnicalException;
 import com.calendar.social.infrastucture.mappers.UserNodeMapper;
 import com.calendar.social.infrastucture.repositories.UserNodeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 public class UserRepositoryAdapter implements UserRepositoryPort {
 
@@ -22,44 +28,85 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     public Mono<Void> save(UserCreatedEventDTO userCreatedEventDTO) {
-        return userNodeRepository.save(userNodeMapper.toUserNodeEntity(userCreatedEventDTO)).then();
+        return userNodeRepository.save(userNodeMapper.toUserNodeEntity(userCreatedEventDTO))
+                .onErrorMap(e -> {
+                    log.error("Erreur lors de l'enregistrement de l'utilisateur : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                })
+                .then();
     }
 
     public Flux<UserSocialDTO> findAllWithSocialStatus(Long userId) {
-        return userNodeRepository.findAllWithSocialStatus(userId).map(userNodeMapper::toUserSocialDTO);
+        return userNodeRepository.findAllWithSocialStatus(userId)
+                .map(userNodeMapper::toUserSocialDTO)
+                .onErrorMap(e -> {
+                    log.error("Erreur lors de la recherche des utilisateurs : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                });
     }
 
     public Flux<UserNodeDTO> findAllFriends(Long userId) {
-            return userNodeRepository.findAllFriends(userId).map(userNodeMapper::toUserNode);
+        return userNodeRepository.findAllFriends(userId)
+                .map(userNodeMapper::toUserNode)
+                .onErrorMap(e -> {
+                    log.error("Erreur lors de la recherche des amis : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                });
     }
 
     public Mono<Boolean> existsByUserNameAndHashtag(String userName, Integer hashtag) {
-        return userNodeRepository.existsByUserNameAndHashtag(userName, hashtag);
+        return userNodeRepository.existsByUserNameAndHashtag(userName, hashtag)
+                .onErrorMap(e -> {
+                    log.error("Erreur lors de la vérification de l'existance de l'utilisateur (hashtag) : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                });
     }
 
     public Flux<UserNodeDTO> findOutgoingRequests(Long userId) {
-        return userNodeRepository.findOutgoingRequests(userId).map(userNodeMapper::toUserNode);
+        return userNodeRepository.findOutgoingRequests(userId)
+                .map(userNodeMapper::toUserNode)
+                .onErrorMap(e -> {
+                    log.error("Erreur lors de la recherche des demandes d'amis reçues : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                });
     }
 
     public Flux<UserNodeDTO> findIncomingRequests(Long userId) {
-        return userNodeRepository.findIncomingRequests(userId).map(userNodeMapper::toUserNode);
+        return userNodeRepository.findIncomingRequests(userId)
+                .map(userNodeMapper::toUserNode)
+                .onErrorMap(e -> {
+                    log.error("Erreur lors de la recherche des demandes d'amis envoyées : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                });
     }
 
     public Mono<UserNodeDTO> sendFriendRequest(Long userId, String targetName, Integer targetHashtag) {
         return userNodeRepository.sendFriendRequest(userId, targetName, targetHashtag)
                 .map(userNodeMapper::toUserNode)
-                .switchIfEmpty(Mono.error(new RuntimeException("Conflit")));
+                .onErrorMap(e -> {
+                    log.error("Erreur lors de l'envoi de la demande d'amis : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                })
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.SEND_FRIEND_REQUEST_FAILURE)));
     }
 
     public Mono<UserNodeDTO> acceptFriendRequest(Long userId, Long senderId) {
         return userNodeRepository.acceptFriendRequest(userId, senderId)
                 .map(userNodeMapper::toUserNode)
-                .switchIfEmpty(Mono.error(new RuntimeException("Conflit")));
+                .onErrorMap(e -> {
+                    log.error("Erreur lors de l'acceptation de la demande d'amis : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                })
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.ACCEPT_FRIEND_REQUEST_FAILURE)));
     }
 
     public Mono<UserNodeDTO> rejectFriendRequest(Long userId, Long senderId) {
         return userNodeRepository.rejectFriendRequest(userId, senderId)
                 .map(userNodeMapper::toUserNode)
-                .switchIfEmpty(Mono.error(new RuntimeException("Conflit")));
+                .onErrorMap(e -> {
+                    log.error("Erreur lors du rejet de la demande d'amis : {}", e.getMessage());
+                    return new TechnicalException(TechnicalErrorCode.DATABASE_ERROR);
+                })
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.REJECT_FRIEND_REQUEST_FAILURE)));
     }
 }
