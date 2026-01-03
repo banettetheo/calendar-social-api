@@ -1,4 +1,4 @@
-package com.calendar.social.infrastucture.models.entities;
+package com.calendar.social.infrastucture.persistence.models.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

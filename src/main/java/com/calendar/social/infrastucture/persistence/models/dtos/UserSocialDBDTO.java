@@ -1,4 +1,4 @@
-package com.calendar.social.infrastucture.models.dtos;
+package com.calendar.social.infrastucture.persistence.models.dtos;
 
 public record UserSocialDBDTO(
         Long userId,
