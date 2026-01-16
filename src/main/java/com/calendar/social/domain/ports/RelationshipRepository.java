@@ -27,5 +27,5 @@ public interface RelationshipRepository {
 
     Mono<Boolean> existsByUserNameAndHashtag(String userName, Integer hashtag);
 
-    Mono<RelationshipDTO> deleteFriendship(String userId, Long friendId);
+    Mono<RelationshipDTO> deleteFriendship(String userId, String friendId);
 }

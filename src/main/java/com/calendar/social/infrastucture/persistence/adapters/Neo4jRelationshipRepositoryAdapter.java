@@ -116,7 +116,7 @@ public class Neo4jRelationshipRepositoryAdapter implements RelationshipRepositor
                 .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.REJECT_FRIEND_REQUEST_FAILURE)));
     }
 
-    public Mono<RelationshipDTO> deleteFriendship(String userId, Long friendId) {
+    public Mono<RelationshipDTO> deleteFriendship(String userId, String friendId) {
         return relationshipRepository.deleteFriendship(userId, friendId)
                 .map(relationshipMapper::toRelationshipDTO)
                 .onErrorMap(e -> {

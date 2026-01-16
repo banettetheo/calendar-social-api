@@ -53,7 +53,7 @@ public Mono<ResponseEntity<Void>> rejectFriendRequest(@AuthenticationPrincipal J
     }
 
     @DeleteMapping("{friendId}")
-    public Mono<ResponseEntity<Void>> deleteFriendship(@AuthenticationPrincipal Jwt jwt, @NotNull @PathVariable Long friendId) {
+    public Mono<ResponseEntity<Void>> deleteFriendship(@AuthenticationPrincipal Jwt jwt, @NotNull @PathVariable String friendId) {
         String userId = jwt.getClaimAsString("businessId");
 
         return relationshipService.deleteFriendship(userId, friendId)

@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface UserNodeRepository extends ReactiveNeo4jRepository<UserNodeEntity, Long> {
+public interface UserNodeRepository extends ReactiveNeo4jRepository<UserNodeEntity, String> {
 
     @Query("MATCH (me:User {userId: $userId}) " +
             "MATCH (target:User {userName: $targetName, hashtag: $targetHashtag}) " +

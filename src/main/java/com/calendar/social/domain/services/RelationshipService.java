@@ -40,7 +40,7 @@ public class RelationshipService {
         return relationshipRepository.rejectFriendRequest(userId, senderId);
     }
 
-    public Mono<Void> deleteFriendship(String userId, Long friendId) {
+    public Mono<Void> deleteFriendship(String userId, String friendId) {
         return relationshipRepository.deleteFriendship(userId, friendId).then();
     }
 
